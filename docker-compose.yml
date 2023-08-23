@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  scheduled.payment.hangfire:
+    image: ${DOCKER_REGISTRY-}scheduledpaymenthangfire
+    build:
+      context: .
+      dockerfile: Scheduled.Payment.Hangfire/Dockerfile
+    depends_on:
+     - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "SqlServer2019!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1434:1433"
+    volumes:
+      - ./vlm-scheduled/data:/var/opt/mssql/data
+      - ./vlm-scheduled/log:/var/opt/mssql/log
+      - ./vlm-scheduled/secrets:/var/opt/mssql/secrets
+
+volumes:
+  vlm-scheduled:

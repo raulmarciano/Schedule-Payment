@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Scheduled.Payment.Hangfire": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
