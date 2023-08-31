@@ -8,6 +8,7 @@ services:
       dockerfile: Scheduled.Payment.Hangfire/Dockerfile
     depends_on:
      - sqlserver
+     - rabbitmq 
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -18,9 +19,21 @@ services:
     ports:
       - "1434:1433"
     volumes:
-      - ./vlm-scheduled/data:/var/opt/mssql/data
-      - ./vlm-scheduled/log:/var/opt/mssql/log
-      - ./vlm-scheduled/secrets:/var/opt/mssql/secrets
+      - ./vlm-scheduled/sql/data:/var/opt/mssql/data
+      - ./vlm-scheduled/sql/log:/var/opt/mssql/log
+      - ./vlm-scheduled/sql/secrets:/var/opt/mssql/secrets
+ 
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./vlm-scheduled/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./vlm-scheduled/rabbitmq/log/:/var/log/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   vlm-scheduled:
